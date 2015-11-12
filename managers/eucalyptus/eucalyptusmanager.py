@@ -1,26 +1,30 @@
 __author__ = 'Davide Monfrecola'
+__author__ = 'Giorgio Gambino'
 
+#import sys
 import boto
 import datetime
 import boto.ec2.cloudwatch
 
-from managers.botomanager import BotoManager
+#from managers.botomanager import BotoManager
 from boto.s3.connection import OrdinaryCallingFormat
 from boto.s3.connection import SubdomainCallingFormat
 from boto.s3.connection import S3Connection
 from boto.ec2.regioninfo import RegionInfo
 from confmanager.eucalyptusconfmanager import EucalyptusConfManager
 
-class EucalyptusManager(BotoManager):
+class EucalyptusManager():
+#class EucalyptusManager(BotoManager):
 
     def __init__(self):
         self.conf = EucalyptusConfManager()
         self.conf.read()
         self.images = None
+        self.instances = None
         self.instance_types = None
         self.security_groups = None
-        self.keys = None
-        self.snapshots = None
+        self.key_pairs = None
+        #self.snapshots = None
         self.volumes = None
         self.instance_monitored = []
 
@@ -52,25 +56,86 @@ class EucalyptusManager(BotoManager):
         except Exception as e:
             print("Connection error({0})".format(e.message))
 
-    """def get_all_configurations(self):
-        self.instance_types = self.ec2conn.get_all_instance_types()
-        self.security_groups = self.ec2conn.get_all_security_groups()
-        self.key_pairs = self.ec2conn.get_all_key_pairs()
-        self.images = self.ec2conn.get_all_images()"""
+    def print_all_images(self):
+        """ print all available images """
+        print("--- Images available ---")
+        print("%-10s %-25s %-25s %-25s %-25s" % ("ID", "Image ID", "Kernel ID", "Type", "State"))
+        i = 1
+        if self.images is None:
+            self.images = self.ec2conn.get_all_images()
+        for image in self.images:
+            print("%-10s %-25s %-25s %-25s %-25s" % (i, image.id, image.kernel_id, image.type, image.state))
+            i = i + 1
+
+    def print_all_instance_types(self):
+        """ print all instance types """
+        print("--- Instance types available ---")
+        print("%-10s %-25s %-15s %-15s %-15s" % ("ID", "Instance name", "Memory (MB)", "Disk (GB)", "Cores"))
+        i = 1
+        if self.instance_types is None:
+            self.instance_types = self.ec2conn.get_all_instance_types()
+        for instance_type in self.instance_types:
+            print("%-10s %-25s %-15s %-15s %-15s"%(i, instance_type.name, instance_type.memory,instance_type.disk, instance_type.cores))
+            i = i + 1
+
+    def print_all_security_groups(self):
+        """ print all security groups """
+        print("--- Security groups available ---")
+        print("%-10s %-25s %-35s" % ("ID", "SG name", "SG description"))
+        i = 1
+        if self.security_groups is None:
+            self.security_groups = self.ec2conn.get_all_security_groups()
+        for security_group in self.security_groups:
+            print("%-10s %-25s %-35s" % (i, security_group.name, security_group.description))
+            i = i + 1
+
+    def print_all_key_pairs(self):
+        """ print all key pairs """
+        print("--- Key pairs available ---")
+        i = 1
+        print("%-10s %-25s %-35s" % ("ID", "Key name", "Key fingerprint"))
+        if self.key_pairs is None:
+            self.key_pairs = self.ec2conn.get_all_key_pairs()
+        for key_pair in self.key_pairs:
+            print("%-10s %-25s %-35s" % (i, key_pair.name, key_pair.fingerprint))
+            i = i + 1
 
     def create_new_instance(self):
-        """
-
-        :return:
-        """
-        Manager.create_new_instance(self)
-        # instance types
+        #image types
+        self.print_all_images()
+        if len(self.images) > 0:
+            image_index = input("Select image: ")
+            self.image_id = self.images[image_index - 1].id
+        else:
+            print("There are no images available!")
+            return False
+        #instance type
         self.print_all_instance_types()
         if len(self.instance_types) > 0:
-            instance_type_index = input("Select instance type: ")
-            self.instance_type = self.instance_types[instance_type_index - 1].name
+            instance_index = input("Select image: ")
+            self.instance_type = self.instance_types[instance_index - 1].name
         else:
             print("There are no instance types available!")
+            return False
+        # security group
+        self.print_all_security_groups()
+        if len(self.security_groups) > 0:
+            security_group_index = input("Select security group: ")
+            self.security_group = [self.security_groups[security_group_index - 1].name]
+        else:
+            #self.security_group = None
+            print("There are no security groups available!")
+            return False
+        # key name
+        self.print_all_key_pairs()
+        if len(self.key_pairs) > 0:
+            key_pair_index = input("Select key pair: ")
+            self.key_name = self.key_pairs[key_pair_index - 1].name
+        else:
+            #self.key_name = None
+            print("There are no keys available!")
+            return False
+
         # monitoring
         monitoring = raw_input("Do you want to enable monitoring? (y/n): ")
         if monitoring == "y":
@@ -82,8 +147,8 @@ class EucalyptusManager(BotoManager):
         print("- %-20s %-30s" % ("Image ID", str(self.image_id)))
         print("- %-20s %-30s" % ("Security group", str(self.security_group)))
         print("- %-20s %-30s" % ("Key pair", str(self.key_name)))
+        print("\nDo you want to continue? (y/n)")
         print("- %-20s %-30s" % ("Monitoring", str(monitoring_enabled)))
-        #print("\nDo you want to continue? (y/n)")
 
         try:
             reservation = self.ec2conn.run_instances(image_id=self.image_id,
@@ -101,6 +166,56 @@ class EucalyptusManager(BotoManager):
                 print("- %-20s %-30s" % ("Instance placement", instance.placement))
         except Exception as e:
             print("An error occured: {0}".format(e.message))
+
+    def print_all_instances(self):
+        """Print instance id, image id, IP address and state for each active instance"""
+        print("Retrieving all instances...")
+        self.instances = self.ec2conn.get_only_instances()
+        #self.reservations = self.ec2conn.get_all_reservations()
+        #instances_objects = [vm for instance in self.reservations for vm in instance.instances]
+        if not self.instances:
+            print("There are no running or pending instances")
+        else:
+            i = 1
+            for instance in self.instances:
+                print("{0} - Instance: {1} | IP address: {2} | Status: {3}".format(i, instance.id + " / " + instance.image_id, instance.ip_address, instance.state))
+                i += 1
+
+    def print_all_volumes(self):
+        """Print volumes and some informations"""
+        print("--- Volumes available ---")
+        #print("%-10s %-25s %-15s %-25s" % ("ID", "Volume ID", "Size (GB)", "Status"))
+        print("Retrieving all volumes...")
+        self.volumes = self.ec2conn.get_all_volumes()
+
+        if not self.volumes:
+            print("There are no volumes")
+        else:
+            i = 1
+            for volume in self.volumes:
+                print("{0} - Volume ID: {1} | Creation {2} | Size: {3} | Attached To: {4} | Status: {5}".format(i, volume.id , volume.create_time, volume.size,volume.attach_data.instance_id ,volume.status))
+                i += 1
+
+    def instance_action(self, action):
+        try:
+            self.print_all_instances()
+            if not self.instances:
+                print("There are no running or pending instances")
+            else:
+                instance_index = input("Please select the instance: ")
+
+            if action == "reboot":
+                self.ec2conn.reboot_instances(self.instances[instance_index - 1].id)
+                print("Instance rebooted")
+            elif action == "terminate":
+                self.ec2conn.terminate_instances(self.instances[instance_index - 1].id)
+                print("Instance terminated")
+            else:
+                raise Exception("Action not supported")
+        except Exception as e:
+           #print 'Error on line {}'.format(sys.exc_info()[-1].tb_lineno)
+           print("An error occurred: {0}".format(e.message))
+
 
     ### CloudWatch
 
@@ -141,20 +256,47 @@ class EucalyptusManager(BotoManager):
 
         return metrics
 
+    """  """
+    def fuffa_menu(self):
+        fuffa_text = """\nWhat would you like to do?
+        --------------------------
+        1) cicci
+        2) sbo
+        3) ok
+        \n"""
+        while True:
+            print(fuffa_text)
+            try:
+                # user input
+                print("Please make a choice: ")
+                choice = input()
+                if choice == 1:
+                    print("lol 1")
+                elif choice == 2:
+                    print("lol 2 ")
+                elif choice == 3:
+                    break
+                else:
+                    raise Exception("Unavailable choice!")
+            except Exception as e:
+                print(e.message)
+
+
     def show_menu(self):
         menu_text = """\nWhat would you like to do?
---------------------------
-1) Create new instance
-2) Show running instances
-3) Reboot instance
-4) Terminate instance
-5) Select instance to monitor
-6) Get CloudWatch metric data
-7) Create new volume
-8) Show available volumes
-9) Show key pairs
-10) Show connection information
-11) Exit\n"""
+        --------------------------
+        1) Create new instance
+        2) Show running instances
+        3) Reboot instance
+        4) Terminate instance
+        5) Select instance to monitor
+        6) Get CloudWatch metric data
+        7) Create new volume
+        8) Show available volumes
+        9) Show key pairs
+        10) Show connection information
+        11) Exit
+        12) Fuffa\n"""
         print(menu_text)
         try:
             # user input
@@ -172,8 +314,12 @@ class EucalyptusManager(BotoManager):
                 self.enable_monitoring()
             elif choice == 6:
                 self.get_cloudwatch_metric_data()
-            elif choice == 7:
+            elif choice == 8:
                 self.print_all_volumes()
+            elif choice == 11:
+                exit(0)
+            elif choice == 12:
+                self.fuffa_menu()
             else:
                 raise Exception("Unavailable choice!")
         except Exception as e:

@@ -26,8 +26,8 @@ class CloudTUI:
         print("Please select the Cloud platform that you want to use:")
 
         print("1) OpenStack")
-        print("2) Nimbus")
-        print("3) Eucalyptus")
+        print("2) Eucalyptus")
+        print("3) Nimbus")
 
         while True:
             try:
