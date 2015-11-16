@@ -42,10 +42,13 @@ class RuleEngine():
     def read_policies(self):
         self.my_intellect.learn(Intellect.local_file_uri("intellect/policies/openstack.policy"))
         logging.info("OpenStack policy loaded")
+        self.my_intellect.learn(Intellect.local_file_uri("intellect/policies/eucalyptus.policy"))
+        logging.info("Eucalyptus policy loaded")
+
         # TEST
         # TODO gestione agenda groups
         self.agenda_groups.append("cpu")
-        self.agenda_groups.append("network")
+        #self.agenda_groups.append("network")
 
     def run(self, meters_queue):
         self.init_resources()
@@ -56,14 +59,14 @@ class RuleEngine():
             try:
                 element = meters_queue.get()
                 logging.info("[RuleEngine] Value received for resource {0}".format(str(element)))
-                logging.debug("Add sample: {0}".format(element))
+                #logging.debug("Add sample: {0}".format(element))
+                logging.debug("Add sample: {0} - {1} - {2}".format(element["resource_id"],element["meter"],element["value"]))
 
-                self.resources[element["resource_id"]].add_sample(meter=element["meter"],
-                                                                  value=element["value"],
-                                                                  timestamp=element["timestamp"])
+                self.resources[element["resource_id"]].add_sample(meter=element["meter"],value=element["value"],timestamp=element["timestamp"])
 
                 self.check_policies()
 
+                #meters_queue.task_done()
             except Exception, e:
                 logging.error("An error occured: %s" % e.args[0])
 

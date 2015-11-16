@@ -48,7 +48,7 @@ class OpenstackMonitor(Monitor):
                      'value': randint(80, 150)}
                 ]'''
                 for sample in samples:
-                    # logging.debug("")
+                    #logging.debug("")
                     meters_queue.put(sample)
             # TODO put sleep time in constant file
             time.sleep(5)

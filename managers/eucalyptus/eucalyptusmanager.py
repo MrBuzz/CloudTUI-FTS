@@ -6,12 +6,19 @@ import boto
 import datetime
 import boto.ec2.cloudwatch
 
+from threading import Thread
+from Queue import Queue
+
+
 #from managers.botomanager import BotoManager
 from boto.s3.connection import OrdinaryCallingFormat
 from boto.s3.connection import SubdomainCallingFormat
 from boto.s3.connection import S3Connection
 from boto.ec2.regioninfo import RegionInfo
+#
 from confmanager.eucalyptusconfmanager import EucalyptusConfManager
+from monitors.eucalyptusmonitor import EucalyptusMonitor
+from rules.ruleengine import RuleEngine
 
 class EucalyptusManager():
 #class EucalyptusManager(BotoManager):
@@ -26,6 +33,8 @@ class EucalyptusManager():
         self.key_pairs = None
         #self.snapshots = None
         self.volumes = None
+        self.monitor = None
+        self.rule_engine = None
         self.instance_monitored = []
 
     def connect(self):
@@ -178,7 +187,7 @@ class EucalyptusManager():
         else:
             i = 1
             for instance in self.instances:
-                print("{0} - Instance: {1} | IP address: {2} | Status: {3}".format(i, instance.id + " / " + instance.image_id, instance.ip_address, instance.state))
+                print("{0} - Instance: {1} | IP address: {2} | Status: {3} | Monitoring: {4}".format(i, instance.id + " / " + instance.image_id, instance.ip_address, instance.state, instance.monitored))
                 i += 1
 
     def print_all_volumes(self):
@@ -215,6 +224,43 @@ class EucalyptusManager():
         except Exception as e:
            #print 'Error on line {}'.format(sys.exc_info()[-1].tb_lineno)
            print("An error occurred: {0}".format(e.message))
+
+    def get_instance_info(self):
+        info = []
+        for instance in self.ec2conn.get_only_instances():
+            #print("Info: {0} -->> {1} \n".format(instance.id ,instance.image_id))
+            info.append({"id": instance.id, "name": instance.image_id})
+        return info
+
+    #def spool(self,queue):
+    #    while True:
+    #        print("spool!")
+    #        item = queue.get()
+    #        print(item)
+    #        queue.task_done()
+
+    def start_monitor(self):
+        meters_queue = Queue()
+        cmd_queue = Queue()
+
+        resources = self.get_instance_info()
+        self.monitor = EucalyptusMonitor(resources=resources, conf=self.conf, region=self.region)
+        monitor_thread = Thread(target=self.monitor.run, args=(meters_queue,))
+        monitor_thread.setDaemon(True)
+        monitor_thread.start()
+
+        #spool_thr = Thread(target=self.spool, args=(meters_queue,))
+        #spool_thr.setDaemon(True)
+        #spool_thr.start()
+
+        self.rule_engine = RuleEngine(resources=resources, cmd_queue=cmd_queue)
+        rule_engine_thread = Thread(target=self.rule_engine.run, args=(meters_queue,))
+        rule_engine_thread.setDaemon(True)
+        rule_engine_thread.start()
+
+    def stop_monitor(self):
+        if self.monitor is not None:
+            self.monitor.stop()
 
 
     ### CloudWatch
@@ -289,8 +335,8 @@ class EucalyptusManager():
         2) Show running instances
         3) Reboot instance
         4) Terminate instance
-        5) Select instance to monitor
-        6) Get CloudWatch metric data
+        5) Start monitor
+        6) Stop monitor
         7) Create new volume
         8) Show available volumes
         9) Show key pairs
@@ -311,9 +357,9 @@ class EucalyptusManager():
             elif choice == 4:
                 self.instance_action("terminate")
             elif choice == 5:
-                self.enable_monitoring()
+                self.start_monitor()
             elif choice == 6:
-                self.get_cloudwatch_metric_data()
+                self.stop_monitor()
             elif choice == 8:
                 self.print_all_volumes()
             elif choice == 11:

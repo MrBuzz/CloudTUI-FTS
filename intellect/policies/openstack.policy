@@ -10,4 +10,4 @@ rule "test load":
                 $resource := Resource( get_sample("cpu_util")>threshold)
         then:
                 attribute cpu_util = $resource.get_sample("cpu_util")
-                $resource.clone()
+                $resource.alarm()

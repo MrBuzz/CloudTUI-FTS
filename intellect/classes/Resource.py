@@ -53,6 +53,9 @@ class Resource(object):
         else:
             return None
 
+    def alarm(self):
+        logging.debug("Alarm: {0} - {1}\n".format(self.resource_id, self. get_sample("CPUUtilization")))
+
     def clone(self):
         self._command_queue.put({'command': 'clone', 'resource_id': self._resource_id})
         # if self._cloned == False:
