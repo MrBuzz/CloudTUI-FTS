@@ -72,7 +72,7 @@ class EucalyptusMonitor:
     def run(self,meters_queue):
         while self.loop:
             for resource in self.resources:
-                samples = self.get_samples(resource["id"])
+                samples = self.get_samples_1(resource["id"])
 
                 for sample in samples:
                     meters_queue.put(sample)

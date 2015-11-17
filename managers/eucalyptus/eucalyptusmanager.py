@@ -5,6 +5,7 @@ __author__ = 'Giorgio Gambino'
 import boto
 import datetime
 import boto.ec2.cloudwatch
+import logging
 
 from threading import Thread
 from Queue import Queue
@@ -18,6 +19,7 @@ from boto.ec2.regioninfo import RegionInfo
 #
 from confmanager.eucalyptusconfmanager import EucalyptusConfManager
 from monitors.eucalyptusmonitor import EucalyptusMonitor
+from managers.eucalyptus.eucalyptusagent import EucalyptusAgent
 from rules.ruleengine import RuleEngine
 
 class EucalyptusManager():
@@ -35,7 +37,8 @@ class EucalyptusManager():
         self.volumes = None
         self.monitor = None
         self.rule_engine = None
-        self.instance_monitored = []
+        self.agent = None
+        #self.instance_monitored = []
 
     def connect(self):
         """Connection to the endpoint specified in the configuration file"""
@@ -222,22 +225,13 @@ class EucalyptusManager():
             else:
                 raise Exception("Action not supported")
         except Exception as e:
-           #print 'Error on line {}'.format(sys.exc_info()[-1].tb_lineno)
            print("An error occurred: {0}".format(e.message))
 
     def get_instance_info(self):
         info = []
         for instance in self.ec2conn.get_only_instances():
-            #print("Info: {0} -->> {1} \n".format(instance.id ,instance.image_id))
             info.append({"id": instance.id, "name": instance.image_id})
         return info
-
-    #def spool(self,queue):
-    #    while True:
-    #        print("spool!")
-    #        item = queue.get()
-    #        print(item)
-    #        queue.task_done()
 
     def start_monitor(self):
         meters_queue = Queue()
@@ -248,20 +242,29 @@ class EucalyptusManager():
         monitor_thread = Thread(target=self.monitor.run, args=(meters_queue,))
         monitor_thread.setDaemon(True)
         monitor_thread.start()
-
-        #spool_thr = Thread(target=self.spool, args=(meters_queue,))
-        #spool_thr.setDaemon(True)
-        #spool_thr.start()
+        logging.info("Eucalyptus Monitor Thread Started")
 
         self.rule_engine = RuleEngine(resources=resources, cmd_queue=cmd_queue)
         rule_engine_thread = Thread(target=self.rule_engine.run, args=(meters_queue,))
         rule_engine_thread.setDaemon(True)
         rule_engine_thread.start()
+        logging.info("Rule Engine Thread Started")
+
+        self.agent = EucalyptusAgent(manager=self)
+        agent_thread = Thread(target=self.agent.run, args=(cmd_queue,))
+        agent_thread.setDaemon(True)
+        agent_thread.start()
+        logging.info("Eucalyptus Agent Thread Started")
+
+    def clone_instance(self, instance_id):
+        pass
 
     def stop_monitor(self):
         if self.monitor is not None:
             self.monitor.stop()
 
+    def alarm(self,resource_id):
+        logging.debug("Alarm on resource: {0}".format(resource_id))
 
     ### CloudWatch
 
