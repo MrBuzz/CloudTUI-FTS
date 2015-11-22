@@ -17,10 +17,14 @@ from boto.s3.connection import SubdomainCallingFormat
 from boto.s3.connection import S3Connection
 from boto.ec2.regioninfo import RegionInfo
 #
+
 from confmanager.eucalyptusconfmanager import EucalyptusConfManager
 from monitors.eucalyptusmonitor import EucalyptusMonitor
 from managers.eucalyptus.eucalyptusagent import EucalyptusAgent
 from rules.ruleengine import RuleEngine
+from agent.actionbinder import bind_action
+from agent.metaagent import MetaAgent
+
 
 class EucalyptusManager():
 #class EucalyptusManager(BotoManager):
@@ -233,6 +237,15 @@ class EucalyptusManager():
             info.append({"id": instance.id, "name": instance.image_id})
         return info
 
+    @bind_action('EucalyptusManager','clone')
+    def clone_instance(self, instance_id):
+        pass
+
+    @bind_action('EucalyptusManager','alarm')
+    def alarm(self,resource_id):
+        logging.debug("Alarm on resource: {0}".format(resource_id))
+
+
     def start_monitor(self):
         meters_queue = Queue()
         cmd_queue = Queue()
@@ -250,21 +263,20 @@ class EucalyptusManager():
         rule_engine_thread.start()
         logging.info("Rule Engine Thread Started")
 
-        self.agent = EucalyptusAgent(manager=self)
+
+        #self.agent = EucalyptusAgent(manager=self)
+        self.agent = MetaAgent(manager=self)
         agent_thread = Thread(target=self.agent.run, args=(cmd_queue,))
         agent_thread.setDaemon(True)
         agent_thread.start()
         logging.info("Eucalyptus Agent Thread Started")
 
-    def clone_instance(self, instance_id):
-        pass
+
 
     def stop_monitor(self):
         if self.monitor is not None:
             self.monitor.stop()
 
-    def alarm(self,resource_id):
-        logging.debug("Alarm on resource: {0}".format(resource_id))
 
     ### CloudWatch
 
