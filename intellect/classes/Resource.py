@@ -53,6 +53,9 @@ class Resource(object):
         else:
             return None
 
+    def action(self,action):
+        self._command_queue.put({'command': action, 'resource_id': self._resource_id})
+
     def alarm(self):
         self._command_queue.put({'command': 'alarm', 'resource_id': self._resource_id})
 
