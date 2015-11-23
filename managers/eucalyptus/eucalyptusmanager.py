@@ -317,31 +317,6 @@ class EucalyptusManager():
 
         return metrics
 
-    """  """
-    def fuffa_menu(self):
-        fuffa_text = """\nWhat would you like to do?
-        --------------------------
-        1) cicci
-        2) sbo
-        3) ok
-        \n"""
-        while True:
-            print(fuffa_text)
-            try:
-                # user input
-                print("Please make a choice: ")
-                choice = input()
-                if choice == 1:
-                    print("lol 1")
-                elif choice == 2:
-                    print("lol 2 ")
-                elif choice == 3:
-                    break
-                else:
-                    raise Exception("Unavailable choice!")
-            except Exception as e:
-                print(e.message)
-
 
     def show_menu(self):
         menu_text = """\nWhat would you like to do?
@@ -356,8 +331,7 @@ class EucalyptusManager():
         8) Show available volumes
         9) Show key pairs
         10) Show connection information
-        11) Exit
-        12) Fuffa\n"""
+        11) Exit\n"""
         print(menu_text)
         try:
             # user input
@@ -379,8 +353,6 @@ class EucalyptusManager():
                 self.print_all_volumes()
             elif choice == 11:
                 exit(0)
-            elif choice == 12:
-                self.fuffa_menu()
             else:
                 raise Exception("Unavailable choice!")
         except Exception as e:
