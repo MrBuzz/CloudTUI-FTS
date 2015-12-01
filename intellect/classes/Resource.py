@@ -56,11 +56,11 @@ class Resource(object):
     def action(self,action):
         self._command_queue.put({'command': action, 'resource_id': self._resource_id})
 
-    def alarm(self):
-        self._command_queue.put({'command': 'alarm', 'resource_id': self._resource_id})
+    #def alarm(self):
+    #    self._command_queue.put({'command': 'alarm', 'resource_id': self._resource_id})
 
-    def clone(self):
-        self._command_queue.put({'command': 'clone', 'resource_id': self._resource_id})
+    #def clone(self):
+    #    self._command_queue.put({'command': 'clone', 'resource_id': self._resource_id})
         # if self._cloned == False:
         #
         #     self._cloned = True

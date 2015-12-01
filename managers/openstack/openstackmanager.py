@@ -10,6 +10,8 @@ from novaclient.client import Client
 
 from managers.openstack.openstackagent import OpenstackAgent
 from monitors.openstackmonitor import OpenstackMonitor
+from agent.metaagent import MetaAgent
+from agent.actionbinder import bind_action
 from rules.ruleengine import RuleEngine
 from confmanager.openstackconfmanager import OpenstackConfManager
 
@@ -202,6 +204,7 @@ class OpenstackManager:
                                                                instance.status))
                 i += 1
 
+    @bind_action('OpenstackManager','clone')
     def clone_instance(self, instance_id):
         '''
         Create a new instance that is a clone of the instance with the instance ID
@@ -513,7 +516,8 @@ class OpenstackManager:
         rule_engine_thread.start()
         logging.info("RuleEngine thread started")
 
-        self.os_agent = OpenstackAgent(manager=self)
+        #self.os_agent = OpenstackAgent(manager=self)
+        self.os_agent = MetaAgent(manager=self)
         os_agent_thread = Thread(target=self.os_agent.run, args=(cmd_queue,))
         os_agent_thread.setDaemon(True)
         os_agent_thread.start()

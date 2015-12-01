@@ -9,5 +9,4 @@ rule "euca test load":
         when:
                 $resource := Resource( get_sample("CPUUtilization")>=threshold)
         then:
-                attribute cpu_util = $resource.get_sample("CPUUtilization")
                 $resource.action('alarm')
