@@ -1,6 +1,8 @@
-from managers.eucalyptus.eucalyptusmanager import EucalyptusManager
-from managers.nimbus.nimbusmanager import NimbusManager
-from managers.openstack.openstackmanager import OpenstackManager
+#from managers.eucalyptus.eucalyptusmanager import EucalyptusManager
+#from managers.nimbus.nimbusmanager import NimbusManager
+#from managers.openstack.openstackmanager import OpenstackManager
+from metamanager.metamanager import MetaManager
+#import metamanager.platforms
 
 __author__ = 'Davide Monfrecola'
 
@@ -11,11 +13,10 @@ class CloudTUI:
         pass
 
     def start(self):
-        constructor = self.show_menu()
+        platform = self.show_menu()
         # Create a new instance according to user platform selection
-        manager = constructor()
-        manager.connect()
-
+        manager = MetaManager(platform)
+        #manager.print_platforms()
         while(True):
             manager.show_menu()
 
@@ -27,23 +28,23 @@ class CloudTUI:
 
         print("1) OpenStack")
         print("2) Eucalyptus")
-        print("3) Nimbus")
+        #print("3) Nimbus")
 
         while True:
             try:
                 # user input
                 print("Please make a choice: ")
                 choice = input()
-                constructor = self.get_constructor(choice)
+                platform = self.get_platform(choice)
                 break
             except Exception:
                 print("Unavailable choice!")
 
-        return constructor
+        return platform
 
-    def get_constructor(self, platform):
+    def get_platform(self, platform):
       return {
-        3: NimbusManager,
-        2: EucalyptusManager,
-        1: OpenstackManager
+        #3: 'NimbusManager',
+        2: 'Eucalyptus',
+        1: 'Openstack'
       }[platform]

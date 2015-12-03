@@ -2,7 +2,8 @@
 
 ### Authors
 Andrea Lombardo<br/>
-Davide Monfrecola
+Davide Monfrecola<br/>
+Gambino Giorgio
 
 ### Institute
 Department of Science and Innovation Technology (DiSIT) - University of Piemonte Orientale - ITALY
@@ -37,7 +38,7 @@ free available under GPL v.3 license.
 	In this case, we suggest to use the "ARM64OpenStack" profile for your
 	experiment.
 1. Install the required libraries
-  1. boto (the following command should work on most 
+  1. boto (the following command should work on most
 			of the linux distributions:
 	 		"sudo pip install boto")
   2. python-novaclient ("sudo pip install pythom-novaclient")

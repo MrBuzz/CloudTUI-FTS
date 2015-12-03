@@ -1,13 +1,15 @@
 import logging
 
+from metamanager.metamanager import MetaManager
+from monitors.monitoringutils import get_metric_name
 from intellect.classes.Resource import Resource
 
-threshold = 0.1
+threshold = 0.02
 
 rule "test load":
         agenda-group cpu
         when:
-                $resource := Resource( get_sample("cpu_util")>threshold)
+                $resource := Resource( get_sample(get_metric_name("CPU",MetaManager.get_curent()))>threshold)
         then:
-                attribute cpu_util = $resource.get_sample("cpu_util")
-                $resource.alarm()
+                print(get_metric_name("CPU",MetaManager.get_curent()))
+                $resource.action('alarm')
