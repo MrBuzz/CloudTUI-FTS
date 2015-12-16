@@ -1,7 +1,6 @@
 __author__ = 'Davide Monfrecola'
 __author__ = 'Giorgio Gambino'
 
-#import sys
 import boto
 import datetime
 import boto.ec2.cloudwatch
@@ -10,8 +9,6 @@ import logging
 from threading import Thread
 from Queue import Queue
 
-
-#from managers.botomanager import BotoManager
 from boto.s3.connection import OrdinaryCallingFormat
 from boto.s3.connection import SubdomainCallingFormat
 from boto.s3.connection import S3Connection
@@ -20,14 +17,12 @@ from boto.ec2.regioninfo import RegionInfo
 
 from confmanager.eucalyptusconfmanager import EucalyptusConfManager
 from monitors.eucalyptusmonitor import EucalyptusMonitor
-from managers.eucalyptus.eucalyptusagent import EucalyptusAgent
 from rules.ruleengine import RuleEngine
-from agent.actionbinder import bind_action
-from agent.metaagent import MetaAgent
+from metaagent.actionbinder import bind_action
+from metaagent.metaagent import MetaAgent
 
 
 class Eucalyptus():
-#class EucalyptusManager(BotoManager):
 
     def __init__(self):
         self.conf = EucalyptusConfManager()

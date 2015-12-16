@@ -7,10 +7,7 @@ import logging
 
 import ceilometerclient.client
 
-from monitor import Monitor
-
-
-class OpenstackMonitor(Monitor):
+class OpenstackMonitor():
     """Openstack monitoring class via Ceilometer APIs (implements IMonitor interface)"""
 
     def __init__(self, resources, conf):

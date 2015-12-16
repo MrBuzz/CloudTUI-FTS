@@ -1,6 +1,7 @@
 from pkgutil import iter_modules
 from inspect import getmembers,isclass
 from importlib import import_module
+from rules.rulemanager import RuleManager
 import platforms
 import sys
 
@@ -12,13 +13,13 @@ class MetaManager:
         self.all_platforms = self.load_all_platforms()
         self.current_platform = self.all_platforms[platform]()
         self.current_platform.connect()
-        self.set_curent(platform)
-
-    def set_curent(self, _plat):
+        self.set_current(platform)
+        self.rule_manager = RuleManager()
+    def set_current(self, _plat):
         MetaManager.current = _plat
 
     @staticmethod
-    def get_curent():
+    def get_current():
         return MetaManager.current
 
     def load_all_platforms(self):
@@ -45,7 +46,7 @@ class MetaManager:
         _choice = input("> ")
         self.current_platform = self.all_platforms[_platforms[_choice-1]]()
         self.current_platform.connect()
-        self.set_curent(_platforms[_choice-1])
+        self.set_current(_platforms[_choice-1])
 
 
     def show_menu(self):
@@ -56,7 +57,8 @@ class MetaManager:
         3) Start monitor
         4) Stop monitor
         5) Change platform
-        6) Exit
+        6) Manage rules
+        7) Exit
         \n"""
         print(menu_text)
         try:
@@ -74,6 +76,8 @@ class MetaManager:
             elif choice == 5:
                 self.change_platform()
             elif choice == 6:
+                self.rule_manager.show_menu()
+            elif choice == 7:
                 exit(0)
             else:
                 raise Exception("Unavailable choice!")

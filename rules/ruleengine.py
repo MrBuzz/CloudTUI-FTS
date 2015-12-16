@@ -1,6 +1,8 @@
-import logging
-
 __author__ = 'Davide Monfrecola'
+
+import os
+import logging
+import policies
 
 from intellect.Intellect import Intellect
 from intellect.classes.Resource import Resource
@@ -40,10 +42,15 @@ class RuleEngine():
 
 
     def read_policies(self):
-        #self.my_intellect.learn(Intellect.local_file_uri("intellect/policies/openstack.policy"))
-        #logging.info("OpenStack policy loaded")
-        self.my_intellect.learn(Intellect.local_file_uri("intellect/policies/cpu.policy"))
-        logging.info("CPU policy loaded")
+        def is_policy(_file):
+            return _file.endswith('.policy')
+
+        _path = policies.__path__[0]
+        all_policies = filter(is_policy, os.listdir(_path))
+        for policy in all_policies:
+            self.my_intellect.learn(Intellect.local_file_uri( policies.__path__[0] + '/' + policy))
+
+        logging.info("All policies loaded")
 
         # TEST
         # TODO gestione agenda groups

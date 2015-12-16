@@ -1,0 +1,26 @@
+## Policy generated from Rulemanager ##
+
+## Import Statements ##
+
+
+from metamanager.metamanager import MetaManager
+from monitors.monitoringutils import get_metric
+from intellect.classes.Resource import Resource
+
+
+## Rule Parameters ##
+rule_threshold=22
+rule_operator="tope"
+rule_metric="CPU"
+rule_action="alarm"
+rule_name="test-2"
+rule_agenda="cpu"
+
+## Rule Body ##
+
+rule rule_name:
+        agenda-group cpu
+        when:
+            $resource := Resource( get_sample(get_metric(rule_metric,MetaManager.get_current()))>=rule_threshold )
+        then:
+            $resource.action(rule_action)

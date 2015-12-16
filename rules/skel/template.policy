@@ -1,0 +1,23 @@
+[imports]
+
+from metamanager.metamanager import MetaManager
+from monitors.monitoringutils import get_metric
+from intellect.classes.Resource import Resource
+
+[rule_params]
+
+rule_name=
+rule_agenda=
+rule_metric=
+rule_threshold=
+rule_operator=
+rule_action=
+
+[rule_body]
+
+rule NAME:
+        AGENDA
+        when:
+            WHEN
+        then:
+            ACTION

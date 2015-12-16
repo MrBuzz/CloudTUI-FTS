@@ -7,11 +7,9 @@ from Queue import Queue
 from threading import Thread
 
 from novaclient.client import Client
-
-from managers.openstack.openstackagent import OpenstackAgent
 from monitors.openstackmonitor import OpenstackMonitor
-from agent.metaagent import MetaAgent
-from agent.actionbinder import bind_action
+from metaagent.metaagent import MetaAgent
+from metaagent.actionbinder import bind_action
 from rules.ruleengine import RuleEngine
 from confmanager.openstackconfmanager import OpenstackConfManager
 
