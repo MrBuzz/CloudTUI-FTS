@@ -52,10 +52,10 @@ class RuleEngine():
 
         logging.info("All policies loaded")
 
-        # TEST
-        # TODO gestione agenda groups
-        self.agenda_groups.append("cpu")
-        #self.agenda_groups.append("network")
+        _File = open(_path + '/' + 'agenda-groups','r')
+        for _line in _File:
+            print(_line)
+            self.agenda_groups.append(_line.rstrip())
 
     def run(self, meters_queue):
         self.init_resources()

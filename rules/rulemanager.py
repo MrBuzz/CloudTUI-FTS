@@ -3,6 +3,7 @@ import collections
 from os import path
 import string
 from  rules import policies
+from  rules.agendamanager import AgendaManager
 import os
 import re
 
@@ -10,7 +11,8 @@ class RuleManager():
 
     def __init__(self):
         self.rule_info_list = self.load_all_rules()
-
+        self.agenda_manager = AgendaManager()
+        
     def load_all_rules(self):
         _info_list = collections.defaultdict(dict)
         _policy_files = self.load_policy_files()
@@ -205,7 +207,8 @@ class RuleManager():
 2) Create rule
 3) Modify rule
 4) Delete rule
-5) Exit\n"""
+5) Manage agenda-groups
+6) Exit\n"""
         while True:
             print(menu_text)
             try:
@@ -221,6 +224,8 @@ class RuleManager():
                 elif choice == 4:
                     self.menu_action('remove')
                 elif choice == 5:
+                    self.agenda_manager.show_menu()
+                elif choice == 6:
                     break
                 else:
                     raise Exception("Unavailable choice!")
