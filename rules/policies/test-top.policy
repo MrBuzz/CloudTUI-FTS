@@ -9,11 +9,11 @@ from intellect.classes.Resource import Resource
 
 
 ## Rule Parameters ##
-rule_threshold=15
-rule_operator="tope"
+rule_threshold=45
+rule_operator="top"
 rule_metric="CPU"
 rule_action="alarm"
-rule_name="test-1"
+rule_name="test-top"
 rule_agenda="cpu"
 
 ## Rule Body ##
@@ -21,6 +21,6 @@ rule_agenda="cpu"
 rule rule_name:
         agenda-group cpu
         when:
-            $resource := Resource( get_sample(get_metric(rule_metric,MetaManager.get_current()))>=rule_threshold )
+            $resource := Resource( get_sample(get_metric(rule_metric,MetaManager.get_current()))>rule_threshold )
         then:
             $resource.action(rule_action)

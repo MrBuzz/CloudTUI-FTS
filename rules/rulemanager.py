@@ -12,7 +12,7 @@ class RuleManager():
     def __init__(self):
         self.rule_info_list = self.load_all_rules()
         self.agenda_manager = AgendaManager()
-        
+
     def load_all_rules(self):
         _info_list = collections.defaultdict(dict)
         _policy_files = self.load_policy_files()
@@ -103,8 +103,10 @@ class RuleManager():
                 _newline = re.sub('AGENDA', 'agenda-group ' + _rule_vars['rule_agenda'], _line)
                 _OFile.write(_newline + '\n')
             elif 'WHEN' in _line:
-                if _rule_vars['rule_operator'] == 'tope':
-                    _operator = '>='
+                if _rule_vars['rule_operator'] == 'top':
+                    _operator = '>'
+                elif _rule_vars['rule_operator'] == 'bottom':
+                    _operator = '<'
                 _newline=re.sub('WHEN', '$resource := Resource( get_sample(get_metric(rule_metric,MetaManager.get_current()))'+ _operator + 'rule_threshold )', _line)
                 _OFile.write(_newline + '\n')
             elif 'ACTION' in _line:
