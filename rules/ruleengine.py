@@ -54,8 +54,9 @@ class RuleEngine():
 
         _File = open(_path + '/' + 'agenda-groups','r')
         for _line in _File:
-            print(_line)
             self.agenda_groups.append(_line.rstrip())
+
+        logging.info("All agenda-groups loaded")
 
     def run(self, meters_queue):
         self.init_resources()

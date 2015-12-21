@@ -11,7 +11,7 @@ from monitors.openstackmonitor import OpenstackMonitor
 from metaagent.metaagent import MetaAgent
 from metaagent.actionbinder import bind_action
 from rules.ruleengine import RuleEngine
-from confmanager.openstackconfmanager import OpenstackConfManager
+from conf.confmanager.openstackconfmanager import OpenstackConfManager
 
 
 class Openstack:

@@ -15,7 +15,7 @@ from boto.s3.connection import S3Connection
 from boto.ec2.regioninfo import RegionInfo
 #
 
-from confmanager.eucalyptusconfmanager import EucalyptusConfManager
+from conf.confmanager.eucalyptusconfmanager import EucalyptusConfManager
 from monitors.eucalyptusmonitor import EucalyptusMonitor
 from rules.ruleengine import RuleEngine
 from metaagent.actionbinder import bind_action
