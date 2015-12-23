@@ -15,6 +15,7 @@ class MetaManager:
         self.current_platform.connect()
         self.set_current(platform)
         self.rule_manager = RuleManager()
+
     def set_current(self, _plat):
         MetaManager.current = _plat
 

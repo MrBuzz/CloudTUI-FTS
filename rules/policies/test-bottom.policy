@@ -9,7 +9,7 @@ from intellect.classes.Resource import Resource
 
 
 ## Rule Parameters ##
-rule_threshold=22
+rule_threshold=40
 rule_operator="bottom"
 rule_metric="cpu"
 rule_action="alarm"

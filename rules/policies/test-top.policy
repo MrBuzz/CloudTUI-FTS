@@ -12,7 +12,7 @@ from intellect.classes.Resource import Resource
 rule_threshold=45
 rule_operator="top"
 rule_metric="cpu"
-rule_action="alarm"
+rule_action="clone"
 rule_name="test-top"
 rule_agenda="cpu"
 

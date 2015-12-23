@@ -36,7 +36,7 @@ class EucalyptusMonitor:
             for metric in metrics:
                 end = datetime.datetime.utcnow()
                 start = end - datetime.timedelta(minutes=2)
-                datapoints = metric.query(start, end, 'Average', 'Percent', 60)
+                datapoints = metric.query(start, end, 'Average', 'Percent', 120)
 
                 for datapoint in datapoints:
                     samples.append(
@@ -52,7 +52,7 @@ class EucalyptusMonitor:
         for meter in self.meters:
             end = datetime.datetime.utcnow()
             start = end - datetime.timedelta(minutes=2)
-            datapoints = self.clwconn.get_metric_statistics(60,
+            datapoints = self.clwconn.get_metric_statistics(120,
                                                             start,
                                                             end,
                                                             meter,

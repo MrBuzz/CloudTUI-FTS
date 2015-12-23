@@ -37,6 +37,7 @@ class Eucalyptus():
         self.monitor = None
         self.rule_engine = None
         self.agent = None
+        self.cloned_instances = []
         #self.instance_monitored = []
 
     def connect(self):
@@ -220,7 +221,9 @@ class Eucalyptus():
                 print("Instance rebooted")
             elif action == "terminate":
                 self.ec2conn.terminate_instances(self.instances[instance_index - 1].id)
-                print("Instance terminated")
+                if instance_id in self.cloned_instances:
+                    del self.cloned_instances[self.instances[instance_index - 1].id]
+                    print("Instance terminated")
             else:
                 raise Exception("Action not supported")
         except Exception as e:
@@ -232,9 +235,49 @@ class Eucalyptus():
             info.append({"id": instance.id, "name": instance.image_id})
         return info
 
+    def is_clonable(self,instance_id):
+        if instance_id in self.cloned_instances:
+            return False
+        else:
+            return True
+
     @bind_action('Eucalyptus','clone')
     def clone_instance(self, instance_id):
-        pass
+
+        if self.is_clonable(instance_id):
+
+            _to_clone =  self.ec2conn.get_only_instances(instance_ids=[instance_id])[0]
+
+            #_security_groups = []
+            #for _group in _to_clone.groups:
+                #_security_groups.append(_group.name)
+
+            logging.debug("Cloning instance: {0}".format(instance_id))
+            #print("- %-20s %-30s" % ("Image ID", str(_to_clone.image_id)))
+            #print("- %-20s %-30s" % ("Instance type", str(_to_clone.instance_type)))
+            #print("- %-20s %-30s" % ("Key pair", str(_to_clone.key_name)))
+
+            try:
+                _clone = self.ec2conn.run_instances(image_id=_to_clone.image_id,
+                                                    key_name=_to_clone.key_name,
+                                                    instance_type=_to_clone.instance_type,
+                                                    security_groups=list([group.name for group in _to_clone.groups]),
+                                                    monitoring_enabled=True,
+                                                    min_count=1,
+                                                    max_count=1)
+            #print("\n--- Clone Success!! ")
+            #print("- %-20s %-30s" % ("ID", _clone.id))
+            #for instance in reservation.instances:
+            #print("- %-20s %-30s" % ("Instance ID", _clone.id))
+            #print("- %-20s %-30s" % ("Instance status", _clone.state))
+            #print("- %-20s %-30s" % ("Instance placement", _clone.placement))
+                self.cloned_instances.append(instance_id)
+                #print(_clone.id, )
+                logging.debug("Cloned instance: {0}".format(instance_id))
+            except Exception as e:
+                logging.debug("An error occured: {0}".format(e.message))
+        else:
+            print("already cloned!!")
 
     @bind_action('Eucalyptus','alarm')
     def alarm(self,resource_id):
