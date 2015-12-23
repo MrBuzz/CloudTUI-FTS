@@ -58,6 +58,26 @@ class RuleEngine():
 
         logging.info("All agenda-groups loaded")
 
+        def queue_get_all(self,q):
+            items = []
+            maxItemsToRetreive = 3
+            for numOfItemsRetrieved in range(0, maxItemsToRetreive):
+                try:
+                    if numOfItemsRetrieved == maxItemsToRetreive:
+                        break
+                        items.append(q.get_nowait())
+                except Empty, e:
+                    break
+                return items
+
+    def get_all_meters(self,_queue):
+        _meters = []
+
+        while not _queue.empty():
+            _meters.append(_queue.get())
+
+        return _meters
+
     def run(self, meters_queue):
         self.init_resources()
         self.read_policies()
@@ -65,12 +85,15 @@ class RuleEngine():
 
         while self.signal:
             try:
-                element = meters_queue.get()
-                logging.info("[RuleEngine] Value received for resource {0}".format(str(element)))
+                #print("ELE")
+                elements = self.queue_get_all(meters_queue)
+                print(elements)
+                #logging.info("[RuleEngine] Value received for resource {0}".format(str(element)))
                 #logging.debug("Add sample: {0}".format(element))
-                logging.debug("Add sample: {0} - {1} - {2}".format(element["resource_id"],element["meter"],element["value"]))
 
-                self.resources[element["resource_id"]].add_sample(meter=element["meter"],value=element["value"],timestamp=element["timestamp"])
+                for element in elements:
+                    logging.debug("Add sample: {0} - {1} - {2}".format(element["resource_id"],element["meter"],element["value"]))
+                    self.resources[element["resource_id"]].add_sample(meter=element["meter"],value=element["value"],timestamp=element["timestamp"])
 
                 self.check_policies()
 
@@ -80,7 +103,7 @@ class RuleEngine():
 
     def check_policies(self):
         logging.debug("Check policies (call reason method)")
-        self.my_intellect.reason(self.agenda_groups)
+        self.my_intellect.reason()
 
     def set_stop_signal(self):
         self.signal = False
