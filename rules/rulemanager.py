@@ -122,9 +122,9 @@ class RuleManager():
 
     def print_rules(self):
         print('#### Rules ####\n')
-        print("%s %s %s %s %s" % ("|Name|", "Agenda|", "Metric|", "Threshold|","Operator|"))
+        print("%s %s %s %s %s %s" % ("|Name|", "Agenda|", "Metric|", "Threshold|","Operator|","Action|"))
         for _, _rule in self.rule_info_list.iteritems():
-            print('|{0}| {1}| {2}| {3}| {4}|'.format(_rule['rule_name'],_rule['rule_agenda'],_rule['rule_metric'],_rule['rule_threshold'],_rule['rule_operator'], ))
+            print('|{0}| {1}| {2}| {3}| {4}| {5}|'.format(_rule['rule_name'],_rule['rule_agenda'],_rule['rule_metric'],_rule['rule_threshold'],_rule['rule_operator'],_rule['rule_action'] ))
 
     def menu_action(self,_action):
 

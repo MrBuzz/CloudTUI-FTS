@@ -11,7 +11,7 @@ def ema_test(window):
     a[:window] = a[window]
     print("ema: %s" % a)
 '''
-platform_metrics = { "CPU" : {"Eucalyptus" : "CPUUtilization", "Openstack" : "cpu_util"  } }
+platform_metrics = { "cpu" : {"Eucalyptus" : "CPUUtilization", "Openstack" : "cpu_util"  } }
 
 def get_metric(_metric, _platform):
     return platform_metrics[_metric][_platform]

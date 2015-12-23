@@ -28,7 +28,7 @@ class EucalyptusMonitor:
     def stop(self):
         self.loop = False
 
-    def get_samples(self, resource_id):
+    def get_samples_v2(self, resource_id):
         samples = []
         for meter in self.meters:
             metrics = self.clwconn.list_metrics(metric_name=meter, dimensions={'InstanceId':[resource_id]})
@@ -42,12 +42,12 @@ class EucalyptusMonitor:
                     samples.append(
                         {"resource_id": resource_id,
                         "meter": meter,
-                        "timestamp": datapoints[nth_datapoint-1]['Timestamp'],
-                        "value": datapoints[nth_datapoint-1]['Average']
+                        "timestamp": datapoint['Timestamp'],
+                        "value": datapoint['Average']
                         })
         return samples
 
-    def get_samples_1(self, resource_id):
+    def get_samples(self, resource_id):
         samples = []
         for meter in self.meters:
             end = datetime.datetime.utcnow()
@@ -72,7 +72,7 @@ class EucalyptusMonitor:
     def run(self,meters_queue):
         while self.loop:
             for resource in self.resources:
-                samples = self.get_samples_1(resource["id"])
+                samples = self.get_samples_v2(resource["id"])
 
                 for sample in samples:
                     meters_queue.put(sample)

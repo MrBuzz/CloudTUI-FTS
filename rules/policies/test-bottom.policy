@@ -11,7 +11,7 @@ from intellect.classes.Resource import Resource
 ## Rule Parameters ##
 rule_threshold=22
 rule_operator="bottom"
-rule_metric="CPU"
+rule_metric="cpu"
 rule_action="alarm"
 rule_name="test-bottom"
 rule_agenda="cpu"
