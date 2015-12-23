@@ -19,6 +19,7 @@ rule_agenda="cpu"
 ## Rule Body ##
 
 rule rule_name:
+        agenda-group cpu
         when:
             $resource := Resource( get_sample(get_metric(rule_metric,MetaManager.get_current()))>rule_threshold )
         then:

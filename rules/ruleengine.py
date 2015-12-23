@@ -78,7 +78,7 @@ class RuleEngine():
 
         return _meters
 
-    def run(self, meters_queue):
+    def run_v2(self, meters_queue):
         self.init_resources()
         self.read_policies()
         logging.info("Rule engine initialization completed")
@@ -101,9 +101,29 @@ class RuleEngine():
             except Exception, e:
                 logging.error("An error occured: %s" % e.args[0])
 
+    def run(self, meters_queue):
+        self.init_resources()
+        self.read_policies()
+        logging.info("Rule engine initialization completed")
+
+        while self.signal:
+            try:
+                element = meters_queue.get()
+                logging.info("[RuleEngine] Value received for resource {0}".format(str(element)))
+                #logging.debug("Add sample: {0}".format(element))
+                logging.debug("Add sample: {0} - {1} - {2}".format(element["resource_id"],element["meter"],element["value"]))
+
+                self.resources[element["resource_id"]].add_sample(meter=element["meter"],value=element["value"],timestamp=element["timestamp"])
+
+                self.check_policies()
+
+                #meters_queue.task_done()
+            except Exception, e:
+                logging.error("An error occured: %s" % e.args[0])
+
     def check_policies(self):
         logging.debug("Check policies (call reason method)")
-        self.my_intellect.reason()
+        self.my_intellect.reason(self.agenda_groups)
 
     def set_stop_signal(self):
         self.signal = False
