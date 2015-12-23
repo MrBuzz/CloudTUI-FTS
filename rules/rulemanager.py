@@ -1,3 +1,4 @@
+__author__ = 'Giorgio Gambino'
 
 import collections
 from os import path

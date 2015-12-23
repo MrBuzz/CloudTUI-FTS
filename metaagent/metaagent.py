@@ -1,3 +1,5 @@
+__author__ = 'Giorgio Gambino'
+
 import logging
 from actionbinder import get_actions
 

@@ -1,3 +1,5 @@
+__author__ = 'Giorgio Gambino'
+
 import collections
 
 _manager_actions = collections.defaultdict(dict)

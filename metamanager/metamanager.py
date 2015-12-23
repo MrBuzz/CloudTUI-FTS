@@ -1,3 +1,5 @@
+__author__ = 'Giorgio Gambino'
+
 from pkgutil import iter_modules
 from inspect import getmembers,isclass
 from importlib import import_module
