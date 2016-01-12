@@ -41,7 +41,7 @@ free available under GPL v.3 license.
   1. boto (the following command should work on most
 			of the linux distributions:
 	 		"sudo pip install boto")
-  2. python-novaclient ("sudo pip install pythom-novaclient")
+  2. python-novaclient ("sudo pip install python-novaclient")
   3. python-ceilometerclient ("sudo pip install python-ceilometerclient")
   4. antlr3 ("sudo pip install http://www.antlr3.org/download/Python/antlr_python_runtime-3.1.3.tar.gz")
 

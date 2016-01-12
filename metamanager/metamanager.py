@@ -57,11 +57,14 @@ class MetaManager:
         --------------------------
         1) Create new instance
         2) Show running instances
-        3) Start monitor
-        4) Stop monitor
-        5) Change platform
-        6) Manage rules
-        7) Exit
+        3) Terminate instance
+        4) Reboot instance
+        5) Manage floating IP (Currently OpenStakc Only)
+        6) Start monitor
+        7) Stop monitor
+        8) Change platform
+        9) Manage rules
+        10) Exit
         \n"""
         print(menu_text)
         try:
@@ -73,14 +76,20 @@ class MetaManager:
             elif choice == 2:
                 self.current_platform.print_all_instances()
             elif choice == 3:
-                self.current_platform.start_monitor()
+                self.current_platform.instance_action("delete")
             elif choice == 4:
-                self.current_platform.stop_monitor()
+                self.current_platform.instance_action("reboot")
             elif choice == 5:
-                self.change_platform()
+                self.current_platform.manage_floating_ip()
             elif choice == 6:
-                self.rule_manager.show_menu()
+                self.current_platform.start_monitor()
             elif choice == 7:
+                self.current_platform.stop_monitor()
+            elif choice == 8:
+                self.change_platform()
+            elif choice == 9:
+                self.rule_manager.show_menu()
+            elif choice == 10:
                 exit(0)
             else:
                 raise Exception("Unavailable choice!")

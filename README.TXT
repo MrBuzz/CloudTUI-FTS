@@ -25,10 +25,10 @@ Quick start:
 	experiment.
 
 1.) Install the required libraries
-	0.a) boto (the following command should work on most 
+	0.a) boto (the following command should work on most
 			of the linux distos:
 	 		"sudo pip install boto")
-	0.b) python-novaclient ("sudo pip install pythom-novaclient")
+	0.b) python-novaclient ("sudo pip install python-novaclient")
 	0.c) python-ceilometerclient ("sudo pip install python-ceilometerclient")
 	0.d) antlr3 ("sudo pip install http://www.antlr3.org/download/Python/antlr_python_runtime-3.1.3.tar.gz") --> TODO: mettere un link generico
 

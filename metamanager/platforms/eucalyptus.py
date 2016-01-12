@@ -216,13 +216,17 @@ class Eucalyptus():
             else:
                 instance_index = input("Please select the instance: ")
 
+            instance_id = self.instances[instance_index - 1].id
+
             if action == "reboot":
-                self.ec2conn.reboot_instances(self.instances[instance_index - 1].id)
+                self.ec2conn.reboot_instances(instance_id)
                 print("Instance rebooted")
-            elif action == "terminate":
-                self.ec2conn.terminate_instances(self.instances[instance_index - 1].id)
+
+            elif action == "delete":
+                self.ec2conn.terminate_instances(instance_id)
+
                 if instance_id in self.cloned_instances:
-                    del self.cloned_instances[self.instances[instance_index - 1].id]
+                    del self.cloned_instances[instance_id]
                     print("Instance terminated")
             else:
                 raise Exception("Action not supported")
@@ -341,7 +345,7 @@ class Eucalyptus():
             elif choice == 3:
                 self.instance_action("reboot")
             elif choice == 4:
-                self.instance_action("terminate")
+                self.instance_action("delete")
             elif choice == 5:
                 self.start_monitor()
             elif choice == 6:
