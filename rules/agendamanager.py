@@ -75,7 +75,7 @@ class AgendaManager:
 2) Add agenda-group
 3) Update agenda-group
 4) Remove agenda-group
-5) Exit\n"""
+5) Back to the main menu\n"""
         while True:
             print(menu_text)
             try:

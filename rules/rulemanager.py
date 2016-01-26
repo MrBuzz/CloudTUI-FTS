@@ -211,7 +211,7 @@ class RuleManager():
 3) Modify rule
 4) Delete rule
 5) Manage agenda-groups
-6) Exit\n"""
+6) Back to the main menu\n"""
         while True:
             print(menu_text)
             try:

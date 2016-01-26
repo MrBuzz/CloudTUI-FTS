@@ -59,7 +59,7 @@ class MetaManager:
         2) Show running instances
         3) Terminate instance
         4) Reboot instance
-        5) Manage floating IP (Currently OpenStakc Only)
+        5) Manage floating IP (Currently OpenStack Only)
         6) Start monitor
         7) Stop monitor
         8) Change platform
