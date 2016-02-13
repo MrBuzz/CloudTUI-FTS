@@ -149,11 +149,11 @@ class Eucalyptus():
             return False
 
         # monitoring
-        monitoring = raw_input("Do you want to enable monitoring? (y/n): ")
-        if monitoring == "y":
-            monitoring_enabled = True
-        else:
-            monitoring_enabled = False
+        #monitoring = raw_input("Do you want to enable monitoring? (y/n): ")
+        #if monitoring == "y":
+        monitoring_enabled = True
+        #else:
+        #    monitoring_enabled = False
 
         print("\n--- Creating new instance with the following properties:")
         print("- %-20s %-30s" % ("Image ID", str(self.image_id)))
@@ -185,6 +185,7 @@ class Eucalyptus():
         self.instances = self.ec2conn.get_only_instances()
         #self.reservations = self.ec2conn.get_all_reservations()
         #instances_objects = [vm for instance in self.reservations for vm in instance.instances]
+
         if not self.instances:
             print("There are no running or pending instances")
         else:
