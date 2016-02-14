@@ -494,12 +494,15 @@ class Openstack:
             self.os_monitor = None
             self.rule_engine_monitor = None
             self.os_agent = None
+            monitoring = False
             print("\n\033[94mOpenStack monitor agent has been stopped\033[0m\n")
         else:
             logging.debug("Monitor not enabled, starting threads")
             print("\nStarting OpenStack monitor...")
             self.start_monitor()
             print("\n\033[92mOpenStack monitor has been started\033[0m\n")
+            monitoring = True
+        return monitoring
 
     def start_monitor(self):
         meters_queue = Queue()

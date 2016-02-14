@@ -288,7 +288,21 @@ class Eucalyptus():
     def alarm(self,resource_id):
         logging.debug("Alarm on resource: {0}".format(resource_id))
 
-
+    def start_stop_monitor(self):
+        if self.monitor is not None:
+            self.stop_monitor()
+            self.monitor = None
+            self.rule_engine = None
+            self.agent = None
+            monitoring = False
+            print("Eucalyptus monitor agent has been stopped")
+        else:
+            logging.debug("Monitor not enabled, starting threads")
+            print("\nStarting Eucalyptus monitor...")
+            self.start_monitor()
+            print("Eucalyptus monitor has been started")
+            monitoring = True
+        return monitoring
     def start_monitor(self):
         meters_queue = Queue()
         cmd_queue = Queue()

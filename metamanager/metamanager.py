@@ -17,6 +17,7 @@ class MetaManager:
         self.current_platform.connect()
         self.set_current(platform)
         self.rule_manager = RuleManager()
+        self.monitoring = False
 
     def set_current(self, _plat):
         MetaManager.current = _plat
@@ -54,18 +55,20 @@ class MetaManager:
 
     def show_menu(self):
         menu_text = """\nWhat would you like to do?
-        --------------------------
-        1) Create new instance
-        2) Show running instances
-        3) Terminate instance
-        4) Reboot instance
-        5) Manage floating IP (Currently OpenStack Only)
-        6) Start monitor
-        7) Stop monitor
-        8) Change platform
-        9) Manage rules
-        10) Exit
-        \n"""
+--------------------------
+1) Create new instance
+2) Show running instances
+3) Terminate instance
+4) Reboot instance
+5) Manage floating IP (Currently OpenStack Only)
+"""
+        if self.monitoring:
+            menu_text += "6) Stop monitor\n"
+        else:
+            menu_text += "6) Start monitor\n"
+
+        menu_text += "7) Change platform\n8) Manage rules\n9) Exit\n"
+
         print(menu_text)
         try:
             # user input
@@ -82,14 +85,12 @@ class MetaManager:
             elif choice == 5:
                 self.current_platform.manage_floating_ip()
             elif choice == 6:
-                self.current_platform.start_monitor()
+                self.monitoring = self.current_platform.start_stop_monitor()
             elif choice == 7:
-                self.current_platform.stop_monitor()
-            elif choice == 8:
                 self.change_platform()
-            elif choice == 9:
+            elif choice == 8:
                 self.rule_manager.show_menu()
-            elif choice == 10:
+            elif choice == 9:
                 exit(0)
             else:
                 raise Exception("Unavailable choice!")
