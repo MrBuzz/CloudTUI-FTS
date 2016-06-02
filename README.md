@@ -55,22 +55,20 @@ profile for your experiment.
 
 1. Open the openstack.conf file under /conf/conf_files and set those values
 	```
-	  ## Nova values
-		+ os_auth_url = http://<HOSTNAME>:<PORT>/v2.0
-		+ os_username = <USERNAME>
-		+ os_password = <PASSWORD>
-		+ os_api_key = <USERNAME>
-		+ os_tenant_name = <USERNAME>
+	os_auth_url = http://<HOSTNAME>:<PORT>/v2.0
+	os_username = <USERNAME>
+	os_password = <PASSWORD>
+	os_api_key = <USERNAME>
+	os_tenant_name = <USERNAME>
 
-	  ## Ceilometer values
-		+ os_ceilometer_auth = = http://<HOSTNAME>:<PORT>/v2.0
-		+	os_ceilometer_username = <USERNAME>
-		+	os_ceilometer_password = <PASSWORD>
-		+	os_ceilometer_tenant_name = <USERNAME>
-		```
- - <HOSTNAME> and <PORT> are the hostname and port of the OpenStack Nova
+	os_ceilometer_auth = = http://<HOSTNAME>:<PORT>/v2.0
+	os_ceilometer_username = <USERNAME>
+	os_ceilometer_password = <PASSWORD>
+	os_ceilometer_tenant_name = <USERNAME>
+	```
+  <HOSTNAME> and <PORT> are the hostname and port of the OpenStack Nova
  	 and Openstack Ceilometer.
- - <USERNAME> and <PASSWORD> are the login credentials for your OpenStack
+  <USERNAME> and <PASSWORD> are the login credentials for your OpenStack
  	installation
 
 	We suggest you to add a line into your /etc/hosts file (superuser permissions
