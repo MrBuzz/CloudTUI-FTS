@@ -34,19 +34,19 @@ distributed for free under GPL v.3 license.
 First you need to install the required libraries by typing the following
 commands in a terminal window:
 ```
-	1. boto (the following command should work on most of the linux distributions: "sudo pip install boto")
-  2. python-novaclient ("sudo pip install python-novaclient")
-  3. python-ceilometerclient ("sudo pip install python-ceilometerclient")
-  4. antlr3 ("sudo pip install http://www.antlr3.org/download/Python/antlr_python_runtime-3.1.3.tar.gz")
+sudo pip install boto --> boto
+sudo pip install python-novaclient --> python-novaclient
+sudo pip install python-ceilometerclient --> python-ceilometerclient
+sudo pip install http://www.antlr3.org/download/Python/antlr_python_runtime-3.1.3.tar.gz --> antlr3
 ```
 ### Step #2: Get the lastest CloudTUI-FTS version
 
 Download the source code from the git repository by using one of the following
 commands:
-
-	1. git clone https://github.com/mrbuzz/CloudTUI-FTS.git (recommended)
-  2. wget https://github.com/mrbuzz/CloudTUI-FTS/archive/master.zip
-
+```
+git clone https://github.com/mrbuzz/CloudTUI-FTS.git (recommended)
+wget https://github.com/mrbuzz/CloudTUI-FTS/archive/master.zip
+```
 ### Step #3: Openstack Configuration
 You'll need an up and running OpenStack installation. If you do not have enough
 resources to run your own installation you can use [CloudLab][1] resources
