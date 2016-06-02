@@ -15,7 +15,7 @@ Massimo Canonico
 massimo.canonico@uniupo.it
 
 ### Description
-***Cloud Text User Interface - Fault Tolerant and Scalable***
+***Cloud Text User Interface - Fault Tolerant and Scalable***<br>
 CloudTUI-FTS is a text user interface able to interact
 with multiple cloud platforms (such as OpenStack, HPE Helion
 Eucalytus and so on)
@@ -34,18 +34,18 @@ distributed for free under GPL v.3 license.
 First you need to install the required libraries by typing the following
 commands in a terminal window:
 
-	0. boto (the following command should work on most of the linux distributions: "sudo pip install boto")
-  1. python-novaclient ("sudo pip install python-novaclient")
-  2. python-ceilometerclient ("sudo pip install python-ceilometerclient")
-  3. antlr3 ("sudo pip install http://www.antlr3.org/download/Python/antlr_python_runtime-3.1.3.tar.gz")
+	1. boto (the following command should work on most of the linux distributions: "sudo pip install boto")
+  2. python-novaclient ("sudo pip install python-novaclient")
+  3. python-ceilometerclient ("sudo pip install python-ceilometerclient")
+  4. antlr3 ("sudo pip install http://www.antlr3.org/download/Python/antlr_python_runtime-3.1.3.tar.gz")
 
 ### Step #2: Get the lastest CloudTUI-FTS version
 
 Download the source code from the git repository by using one of the following
 commands:
 
-	0. git clone https://github.com/mrbuzz/CloudTUI-FTS.git (recommended)
-  1. wget https://github.com/mrbuzz/CloudTUI-FTS/archive/master.zip
+	1. git clone https://github.com/mrbuzz/CloudTUI-FTS.git (recommended)
+  2. wget https://github.com/mrbuzz/CloudTUI-FTS/archive/master.zip
 
 ### Step #3: Openstack Configuration
 You'll need an up and running OpenStack installation. If you do not have enough
@@ -53,16 +53,16 @@ resources to run your own installation you can use [CloudLab][1] resources
 that are available for free.  In this case, we suggest to use the ***OpenStack***
 profile for your experiment.
 
-0. Open the openstack.conf file under /conf/conf_files and set those values
+1. Open the openstack.conf file under /conf/conf_files and set those values
 
-	0. Nova values
+	1. Nova values
 		+ os_auth_url = http://<HOSTNAME>:<PORT>/v2.0
 		+ os_username = <USERNAME>
 		+ os_password = <PASSWORD>
 		+ os_api_key = <USERNAME>
 		+ os_tenant_name = <USERNAME>
 
-	1. Ceilometer values
+	2. Ceilometer values
 		+ os_ceilometer_auth = = http://<HOSTNAME>:<PORT>/v2.0
 		+	os_ceilometer_username = <USERNAME>
 		+	os_ceilometer_password = <PASSWORD>
