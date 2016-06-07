@@ -127,7 +127,7 @@ s3_path = /services/Walrus
 ```
 
 `<HOSTNAME>`and `<PORT>` are the hostname and port of the Eucalyptus
- and Walrus services.
+ and Walrus services.<br>
 `<KEY ID>` and `<ACCESS KEY>` are the login credentials for your Eucalyptus
 installation. You can generate those values from you Eucalyptus admin dashboard
 
